@@ -1,59 +1,58 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+    import './styles.css'
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
+<div class="container">
+    <header>
+        <h1>Modpacker</h1>
+        <span>Create your dream minecraft modpack with ease.</span>
+    </header>
+    <main>
+        <a href="/create">New Modpack</a>
+    </main>
+</div>
 
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
 
-	h1 {
-		width: 100%;
-	}
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
 
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
+    span {
+        font-size: 1.2rem;
+    }
+
+    main {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 1.3rem;
+        padding: 0.7rem;
+        color: var(--text-color);
+        background-color: var(--color-bg-2);
+        text-decoration: none;
+        transition-duration: 0.2s ;
+    }  
+
+    a:hover {
+        background-color: var(--color-theme-1);
+        color: black;
+    }
+
 </style>
