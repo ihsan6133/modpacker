@@ -5,26 +5,59 @@
     import AddModMenu from './add_mod_menu/AddModMenu.svelte';
     import type { Mod } from './ModApi';
 
-    let selected_mods: Mod[] = [];
+    let selectedMods: Mod[] = [];
 
     let addModMenu: AddModMenu;
     
     
     function onModAdded(event: CustomEvent<Mod>) {
-        selected_mods = [...selected_mods, event.detail];
+        selectedMods = [...selectedMods, event.detail];
+    }
+
+    function saveModpack(event: MouseEvent) {
+        console.log(selectedMods);
+    }
+
+    function exportModpack(event: MouseEvent) {
+        console.log(selectedMods);
+    }
+
+    function downloadModpack(event: MouseEvent) {
+        console.log(selectedMods);
     }
     
 </script>
 
-<div>
+<div class="container">
     <Header msg={"New Modpack"}/>
-    <ModList bind:mods={selected_mods} on:addmod={()=>{addModMenu.open()}}/>
-    <AddModMenu bind:this={addModMenu} on:modadded={onModAdded}/>
+    
+    <div class="buttons">
+        <button on:click={saveModpack}>Save</button>
+        <button on:click={exportModpack}>Export</button>
+        <button on:click={downloadModpack}>Download</button>
+    </div>
+
+    <ModList bind:mods={selectedMods} on:addmod={()=>{addModMenu.open()}}/>
+    <AddModMenu bind:selectedMods={selectedMods} bind:this={addModMenu} on:modadded={onModAdded}/>
+    
 </div>
 
 <style>
-    div {
+    .container {
         position: relative;
         height: 100%;
     }
+    
+    .buttons {
+        padding: 1rem 1rem 0;
+        display: flex;
+        justify-content: space-around;
+        gap: 1rem;
+    }
+    button {
+        flex: 1;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+    }
+
 </style>

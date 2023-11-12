@@ -7,10 +7,10 @@
 </script>
 
 <div class="mod-list">
+    <AddModCard on:addmod/>
     {#each mods as mod}
         <ModCard modData={mod}/>
     {/each}
-    <AddModCard on:addmod/>
 </div>
 
 <style>

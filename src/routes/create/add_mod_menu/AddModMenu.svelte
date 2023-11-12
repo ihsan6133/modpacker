@@ -7,14 +7,14 @@
     import { fetchMods } from "../ModApi";
     import SearchModCard from "./SearchModCard.svelte";
     
-    let dialog: HTMLDialogElement;
-    onMount(() => {
-        dialog = document.querySelector("dialog") as HTMLDialogElement;
-    });
-
     export function open() {
         dialog.show();
     }
+
+    export let selectedMods: Mod[];
+
+
+    let dialog: HTMLDialogElement;
 
     let modPromise: Promise<Mod[]> = Promise.resolve([]);
 
@@ -22,9 +22,15 @@
         modPromise = fetchMods(event.detail);
     }
 
+    function isModAlreadySelected(mod: Mod): boolean {
+        let boolean = selectedMods.some(selectedMod => selectedMod.id === mod.id);
+        
+        return boolean;
+    }
+
 </script>
 
-<dialog class="container">
+<dialog bind:this={dialog} class="container" >
     <header>
         <SearchBar on:search={onSearch}/>
         <CloseButton on:click={()=>dialog.close()}/>   
@@ -38,7 +44,7 @@
                 <div class="info">No mods found</div>
             {/if}
             {#each mods as mod}
-                <SearchModCard modData={mod} on:modadded={()=>{dialog.close()}} on:modadded/>
+                <SearchModCard alreadyAdded={isModAlreadySelected(mod)} modData={mod} on:modadded={()=>{dialog.close()}} on:modadded/>
             {/each}
         {/await}
     </div>
@@ -52,7 +58,7 @@
         left: 0;
         width: 100%;
         height: 100%;   
-        background-color: #151515ee;
+        background-color: #151515f5;
         padding: 1rem;
         box-sizing: border-box;     
         border: none; 

@@ -3,15 +3,21 @@
     import { createEventDispatcher } from "svelte";
     
     export let modData: Mod;
+    export let alreadyAdded: boolean = false;
+
+    let title = "";
+    $: title = alreadyAdded ? "This mod is already added the the modpack" : "Add mod";
+
     
     const dispatch = createEventDispatcher();
     
     function onClick() {
         dispatch("modadded", modData);
+        alreadyAdded = true;
     }
 </script>
 
-<button class="container" on:click={onClick}>
+<button class="container" class:disabled={alreadyAdded} on:click={onClick} title={title} disabled='{alreadyAdded}' >
     <img src={modData.thumbnailUrl} alt="thumbnail">
     <div class="info">
         <h3>{modData.name}</h3>
@@ -28,7 +34,7 @@
         text-align: left;
     }
 
-    .container:hover {
+    .container:not(.disabled):hover{
         background-color: var(--color-bg-2);
     }
 
@@ -47,5 +53,10 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .disabled {
+        cursor: default;
+        opacity: 0.5;
     }
 </style>
