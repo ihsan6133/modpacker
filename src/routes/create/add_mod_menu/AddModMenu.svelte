@@ -28,6 +28,11 @@
         return boolean;
     }
 
+    function onModAdded(event: CustomEvent<Mod>) {
+        dialog.close();
+        selectedMods = [...selectedMods, event.detail];
+    }
+
 </script>
 
 <dialog bind:this={dialog} class="container" >
@@ -44,7 +49,7 @@
                 <div class="info">No mods found</div>
             {/if}
             {#each mods as mod}
-                <SearchModCard alreadyAdded={isModAlreadySelected(mod)} modData={mod} on:modadded={()=>{dialog.close()}} on:modadded/>
+                <SearchModCard alreadyAdded={isModAlreadySelected(mod)} modData={mod} on:modadded={onModAdded}/>
             {/each}
         {/await}
     </div>

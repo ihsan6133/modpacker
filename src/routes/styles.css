@@ -18,8 +18,11 @@
 	color: var(--color-text);
 }
 
+html {
+	height: 100%;
+}
 body {
-	height: 100vh;
+	height: 100%;
 	margin: 0;
 	background-color: var(--color-bg-0);
 }
@@ -89,6 +92,23 @@ button:focus:not(:focus-visible) {
 	outline: none;
 }
 
+select {
+	background-color: var(--color-bg-2);
+	color: var(--color-text);
+	font-family: inherit;
+	border: none;
+
+	appearance: none;
+
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1em;
+	background-origin:padding-box;
+	cursor: pointer;
+	padding-right: 2rem;
+}
+
 
 .visually-hidden {
 	border: 0;
@@ -100,4 +120,43 @@ button:focus:not(:focus-visible) {
 	position: absolute;
 	width: 1px;
 	white-space: nowrap;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to { 
+        transform: rotate(360deg);
+    }
+}
+ 
+
+ @-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to { 
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.loading-circle {
+	width: 100px;
+	height: 100px;
+	border:solid 10px #8822aa;
+	border-radius: 50%;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	 -webkit-transition: all 0.5s ease-in;
+    -webkit-animation-name:             rotate; 
+    -webkit-animation-duration:         1.0s; 
+    -webkit-animation-iteration-count:  infinite;
+    -webkit-animation-timing-function: linear;
+    	
+    	 transition: all 0.5s ease-in;
+    animation-name:             rotate; 
+    animation-duration:         1.0s; 
+    animation-iteration-count:  infinite;
+    animation-timing-function: linear; 
 }
