@@ -27,29 +27,15 @@
     }
     function formatBytes(a: any,b=2){if(!+a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return`${parseFloat((a/Math.pow(1024,d)).toFixed(c))} ${["Bytes","KiB","MiB","GiB","TiB","PiB","EiB","ZiB","YiB"][d]}`}
 
+    function generateDownloadUrl() {
+        const downloadLinks = selectedMods.map(mod => modFiles[mod.id].downloadUrl);
+        const b64 = btoa(JSON.stringify(downloadLinks));
+        return `/api/download?downloadLinks=${b64}`;
+    }
 
     let promise: Promise<void> = Promise.resolve();
     $: selectedMods, selectedVersion, selectedModLoader, promise = loadFiles();
     let dialog: HTMLDialogElement;
-
-    async function downloadMods() {
-        const files = [];
-        for (let mod of selectedMods) {
-            console.log(modFiles[mod.id].downloadUrl);
-            
-            const res = await fetch(modFiles[mod.id].downloadUrl, {
-                mode: "no-cors",
-            });
-            files.push(res);
-            console.log(`${mod.name}`);
-        }
-
-
-        const blob = await downloadZip(files).blob();
-        const link = document.createElement("a");
-        
-        return URL.createObjectURL(blob);
-    }
 </script>
 
 <dialog bind:this={dialog} class="container">
@@ -104,11 +90,7 @@
         </div>
         {#await promise then}
             {#if isOpen}
-            {#await downloadMods()}
-            Downloading
-            {:then url} 
-            <a href={url} download={modPackName}>Download</a>    
-            {/await}
+                <a href={generateDownloadUrl()} download={modPackName}>Download</a>
             {/if}
         {/await}
     </div>
@@ -185,7 +167,9 @@
         margin-top: 1rem;
     }
 
-    button {
+    a {
+        background-color: var(--color-bg-2);
+        color: var(--color-text);
         font-size: 1.2rem;
         border-radius: 5px;
         padding: 0.4rem;
@@ -212,4 +196,5 @@
         color: var(--color-text);
         font-size: 1.1rem;
     }
+
 </style>
