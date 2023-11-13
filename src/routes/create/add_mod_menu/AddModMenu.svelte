@@ -1,18 +1,19 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import SearchBar from "./SearchBar.svelte";
-    import CloseButton from "./CloseButton.svelte";
+    import CloseButton from "../CloseButton.svelte";
 
     import type { Mod } from "../ModApi";
     import { fetchMods } from "../ModApi";
     import SearchModCard from "./SearchModCard.svelte";
     
-    export function open() {
+    export function show() {
+        isOpen = true;
         dialog.show();
     }
 
     export let selectedMods: Mod[];
-
+    export let isOpen = false;
 
     let dialog: HTMLDialogElement;
 
@@ -29,6 +30,7 @@
     }
 
     function onModAdded(event: CustomEvent<Mod>) {
+        isOpen = false;
         dialog.close();
         selectedMods = [...selectedMods, event.detail];
     }
@@ -38,7 +40,7 @@
 <dialog bind:this={dialog} class="container" >
     <header>
         <SearchBar on:search={onSearch}/>
-        <CloseButton on:click={()=>dialog.close()}/>   
+        <CloseButton on:click={()=>{isOpen=false; dialog.close()}}/>   
     </header>
     
     <div class="mod-list">
@@ -57,6 +59,7 @@
 
 
 <style>
+
     .container {
         position: absolute;
         top: 0;

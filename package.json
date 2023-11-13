@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/quicksand": "^5.0.15"
+		"@fontsource/quicksand": "^5.0.15",
+		"client-zip": "^2.4.4"
 	}
 }

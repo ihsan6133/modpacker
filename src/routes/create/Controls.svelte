@@ -3,8 +3,11 @@
     import type { ChangeEventHandler } from "svelte/elements";
     import type { PageData } from "../$types";
     export let minecraftVersions: string[];
-    export let selectedVersion: string = minecraftVersions[0];
+    console.log(minecraftVersions);
     
+    export let selectedVersion: string = minecraftVersions[0];
+    export let selectedModLoader: string;
+
     const dispatch = createEventDispatcher();
 
     function saveModpack(event: MouseEvent) {
@@ -22,16 +25,27 @@
 </script>
 
 <div class="container">
-    <button on:click={saveModpack}>Save</button>
-    <button on:click={exportModpack}>Export</button>
-    <button on:click={downloadModpack}>Download</button>
+    <div class="flex">
+        <button on:click={saveModpack}>Save</button>
+        <button on:click={exportModpack}>Export</button>
+        <button on:click={downloadModpack}>Download</button>
+    </div>
     
-    <select name="version" id="" bind:value={selectedVersion}>
-        {#each minecraftVersions as version}
-            <option value={version}>{version}</option>
-        {/each}
-    </select>
 
+    <div class="flex">
+        <select name="version" id="" bind:value={selectedVersion}>
+            {#each minecraftVersions as version}
+                <option value={version}>{version}</option>
+            {/each}
+        </select>
+        <select name="modloader" bind:value={selectedModLoader}>
+            <option value="forge">Forge</option>
+            <option value="fabric">Fabric</option>
+            <option value="cauldron">Cauldron</option>
+            <option value="liteloader">LightLoader</option>
+            <option value="quilt">Quilt</option>
+        </select>
+    </div>
 </div>
 
 <style>
@@ -58,5 +72,11 @@
         position: relative;
     }
 
+    .flex {
+        display: flex;
+        justify-content: space-around;
+        flex: 1 1 auto;
+        gap: 1rem;
+    }
     
 </style>
