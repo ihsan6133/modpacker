@@ -14,7 +14,9 @@
     export let selectedModLoader: string;
     export let isOpen = false;
 
-    let modPackName: string = `${selectedVersion}-${selectedModLoader}-pack.zip`;
+    let modPackName: string;
+    $: modPackName = `${selectedVersion}-${selectedModLoader}-pack.zip`;
+    
     let modFiles: Record<number, File> = {};
     
     async function loadFiles() {
@@ -33,10 +35,15 @@
     async function downloadMods() {
         const files = [];
         for (let mod of selectedMods) {
-            const res = await fetch(modFiles[mod.id].downloadUrl);
+            console.log(modFiles[mod.id].downloadUrl);
+            
+            const res = await fetch(modFiles[mod.id].downloadUrl, {
+                mode: "no-cors",
+            });
             files.push(res);
             console.log(`${mod.name}`);
         }
+
 
         const blob = await downloadZip(files).blob();
         const link = document.createElement("a");
