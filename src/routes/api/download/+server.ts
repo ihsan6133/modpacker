@@ -18,10 +18,13 @@ export async function GET({url}: {url: URL}) {
         files.push(res);
     }
 
-    // create zip
-    const zip = await downloadZip(files);
+    // create zip, 
+    const zip = await downloadZip(files, {
+        
+    });
     
     // return zip  
+    zip.headers.delete("Content-Disposition");
     return zip;
 
 
