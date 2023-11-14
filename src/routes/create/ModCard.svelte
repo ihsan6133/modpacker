@@ -2,15 +2,18 @@
     import AddModCard from "./AddModCard.svelte";
     import type { FileIndex, Mod } from "./ModApi";
     import { fetchLatestFiles } from "./ModApi";
+    import { createEventDispatcher } from "svelte";
+
     export let modData: Mod;
     export let selectedVersion: string;
-    
+    const dispatch = createEventDispatcher();
     
     let fileIndexes: FileIndex[];
     
     async function promise() {
         fileIndexes = await fetchLatestFiles(modData.id);
     }
+
 
 </script>
 
@@ -19,13 +22,21 @@
     <div class="info">
         <div class="header">
             <h3>{modData.name}</h3>
-            {#await promise()}
+            
+            <div class="control">
+                {#await promise()}
                 <div class="loading-circle"></div>
-            {:then _}
+                {:then _}
                 {#if !fileIndexes.some(file=>file.gameVersion === selectedVersion)}
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><title>{`Not available for version ${selectedVersion}`}</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1.5-5.009c0-.867.659-1.491 1.491-1.491.85 0 1.509.624 1.509 1.491 0 .867-.659 1.509-1.509 1.509-.832 0-1.491-.642-1.491-1.509zM11.172 6a.5.5 0 0 0-.499.522l.306 7a.5.5 0 0 0 .5.478h1.043a.5.5 0 0 0 .5-.478l.305-7a.5.5 0 0 0-.5-.522h-1.655z" fill="#ff2424"></path></g></svg>  
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><title>{`Not available for version ${selectedVersion}`}</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1.5-5.009c0-.867.659-1.491 1.491-1.491.85 0 1.509.624 1.509 1.491 0 .867-.659 1.509-1.509 1.509-.832 0-1.491-.642-1.491-1.509zM11.172 6a.5.5 0 0 0-.499.522l.306 7a.5.5 0 0 0 .5.478h1.043a.5.5 0 0 0 .5-.478l.305-7a.5.5 0 0 0-.5-.522h-1.655z" fill="#ff2424"></path></g></svg>  
                 {/if}
-            {/await}
+                {/await}
+
+                <button title="Remove mod" class="remove-btn" on:click={()=>dispatch("removemod")}>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Remove_Minus"> <path id="Vector" d="M6 12H18" stroke="#e3e3e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>               
+                </button>
+
+            </div>
         </div>
         <div>{modData.description}</div>
     </div>
@@ -74,5 +85,22 @@
         border-width: 3px;
         box-sizing: border-box;
 
+    }   
+    .control {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .remove-btn {
+        width: 25px;
+        height: 25px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        padding: 0;
+        border-radius: 50%;
+    }
+    .remove-btn:hover {
+        background-color: var(--color-bg-2);
     }
 </style>

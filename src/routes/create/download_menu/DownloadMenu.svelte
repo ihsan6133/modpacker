@@ -133,7 +133,8 @@
 
     .table-container {
         margin-top: 1rem;
-
+        max-height: calc(100% - 180px);
+        overflow: auto;
     }
     table {
         width: 100%;
