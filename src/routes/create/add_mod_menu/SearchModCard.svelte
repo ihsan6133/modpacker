@@ -3,8 +3,11 @@
     import { createEventDispatcher } from "svelte";
     
     export let modData: Mod;
-    export let alreadyAdded: boolean = false;
-
+    export let selectedMods: Mod[];
+   
+    let alreadyAdded = false;
+    $: alreadyAdded = selectedMods.some(mod => mod.id === modData.id);
+    
     let title = "";
     $: title = alreadyAdded ? "This mod is already added the the modpack" : "Add mod";
 
@@ -13,7 +16,6 @@
     
     function onClick() {
         dispatch("modadded", modData);
-        alreadyAdded = true;
     }
 </script>
 

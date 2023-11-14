@@ -16,17 +16,10 @@
     export let isOpen = false;
 
     let dialog: HTMLDialogElement;
-
     let modPromise: Promise<Mod[]> = Promise.resolve([]);
 
     function onSearch(event: CustomEvent<string>) {
         modPromise = fetchMods(event.detail);
-    }
-
-    function isModAlreadySelected(mod: Mod): boolean {
-        let boolean = selectedMods.some(selectedMod => selectedMod.id === mod.id);
-        
-        return boolean;
     }
 
     function onModAdded(event: CustomEvent<Mod>) {
@@ -51,7 +44,7 @@
                 <div class="info">No mods found</div>
             {/if}
             {#each mods as mod}
-                <SearchModCard alreadyAdded={isModAlreadySelected(mod)} modData={mod} on:modadded={onModAdded}/>
+                <SearchModCard selectedMods={selectedMods} modData={mod} on:modadded={onModAdded}/>
             {/each}
         {/await}
     </div>
