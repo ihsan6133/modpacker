@@ -2,9 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import type { ChangeEventHandler } from "svelte/elements";
     import type { PageData } from "../$types";
-    export let minecraftVersions: string[];
-    console.log(minecraftVersions);
-    
+    export let minecraftVersions: string[];    
     export let selectedVersion: string = minecraftVersions[0];
     export let selectedModLoader: string;
 

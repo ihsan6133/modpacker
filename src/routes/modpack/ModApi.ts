@@ -44,7 +44,7 @@ async function fetchLatestFiles(modId: number): Promise<FileIndex[]> {
     return data.data.latestFilesIndexes;
 }
 
-async function fetchMods(searchTerm: string) : Promise<Mod[]> {
+async function searchMods(searchTerm: string) : Promise<Mod[]> {
     
     const response = await fetch(`${CURSEFORGE_MOD_SEARCH_URL}?gameId=432&searchFilter=${searchTerm}&sortField=6&sortOrder=desc`, {
         headers: {
@@ -69,6 +69,35 @@ async function fetchMods(searchTerm: string) : Promise<Mod[]> {
 
     return mods;
 }
+
+async function fetchMods(modIds: number[], fetch: any) : Promise<Mod[]> {
+    const response = await fetch(`${CURSEFORGE_BASE_URL}/v1/mods`, {
+        method: "POST",
+        body: JSON.stringify({
+            "modIds": modIds,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CURSEFORGE_API_KEY
+        }
+    });
+
+    const data = await response.json();
+
+    const mods: Mod[] = data.data.map((mod: any) => {        
+        return {
+            id: mod.id,
+            name: mod.name,
+            description: mod.summary,
+            authors: "",
+            downloads: mod.downloadCount,
+            thumbnailUrl: mod.logo ? mod.logo.url : CURSEFORGE_THUMBNAIL_FALLBACK_URL
+        };
+    });
+
+    return mods;
+
+} 
 
 async function fetchFile(modId: number, version: string, modLoader: string) : Promise<File>{
 
@@ -109,4 +138,4 @@ async function fetchFile(modId: number, version: string, modLoader: string) : Pr
 }
 
 export type { Mod, FileIndex, File };
-export { fetchMods, fetchLatestFiles, fetchFile };
+export { fetchMods, fetchLatestFiles, fetchFile, searchMods };

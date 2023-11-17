@@ -8,7 +8,7 @@
         <span>Create your dream minecraft modpack with ease.</span>
     </header>
     <main>
-        <a href="/create">New Modpack</a>
+        <a href="/modpack">New Modpack</a>
     </main>
 </div>
 

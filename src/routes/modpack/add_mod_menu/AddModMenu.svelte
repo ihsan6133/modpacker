@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import SearchBar from "./SearchBar.svelte";
+    import SearchBar from "../../../components/input/SearchBar.svelte";
     import CloseButton from "../CloseButton.svelte";
 
     import type { Mod } from "../ModApi";
-    import { fetchMods } from "../ModApi";
+    import { fetchMods, searchMods } from "../ModApi";
     import SearchModCard from "./SearchModCard.svelte";
     
     export function show() {
@@ -19,7 +19,7 @@
     let modPromise: Promise<Mod[]> = Promise.resolve([]);
 
     function onSearch(event: CustomEvent<string>) {
-        modPromise = fetchMods(event.detail);
+        modPromise = searchMods(event.detail);
     }
 
     function onModAdded(event: CustomEvent<Mod>) {

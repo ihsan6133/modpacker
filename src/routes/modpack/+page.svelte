@@ -9,11 +9,17 @@
     import DownloadMenu from './download_menu/DownloadMenu.svelte';
     import SaveMenu from './save_menu/SaveMenu.svelte';
     import { page } from '$app/stores';
-    
+    import { encode } from './base64ArrayBuffer';
+    import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
     export let data: PageData;
     
-    let selectedMods: Mod[] = [];
+    let selectedMods: Mod[] = data.mods;
 
+    onMount(() => {
+        window = window;
+    });
+    let window: Window;
     let addModMenu: AddModMenu;
     let downloadMenu: DownloadMenu;
     let saveMenu: SaveMenu;
@@ -32,16 +38,36 @@
     let downloadMenuOpen: boolean;
     let saveMenuOpen: boolean;
 
-    let selectedVersion: string;
-    let selectedModLoader: string;
+    let selectedVersion: string = data.version ?? data.minecraftVersions[0];
+    let selectedModLoader: string = data.modLoader ?? "forge";
 
-    $: console.log(selectedVersion);
+    function generateModPackUrl(mods: Mod[], version: string, modloader: string) {
+        let modsQuery = "";
+        
+        if (mods.length > 0) {
+            let modIds: Int32Array = new Int32Array(mods.map(mod => mod.id));         
+            let base64: string = encode(modIds.buffer);
+            modsQuery = `mods=${base64}`;
+        }
+
+
+        return `${$page.url.origin}/modpack?${modsQuery}&version=${version}&modloader=${modloader}`;
+    }
+    
+
+    // $: window?.history.replaceState(window.history.state, "", generateModPackUrl(selectedMods, selectedVersion, selectedModLoader));
+    // $: goto(generateModPackUrl(selectedMods, selectedVersion, selectedModLoader), {replaceState: true});
+    function onExport() {
+        let modIds: Int32Array = new Int32Array(selectedMods.map(mod => mod.id));         
+        let base64: string = encode(modIds.buffer);
+        console.log(base64);   
+    }
 </script>
 
 <div class="container" class:scroll-lock={isScrollLocked}>
     <Header msg={"New Modpack"}/>
     
-    <Controls bind:selectedVersion bind:selectedModLoader minecraftVersions={data.minecraftVersions} on:save={saveMenu.show} on:download={downloadMenu.show}/>
+    <Controls bind:selectedVersion bind:selectedModLoader minecraftVersions={data.minecraftVersions} on:save={saveMenu.show} on:download={downloadMenu.show} on:export={onExport}/>
 
     <ModList selectedVersion={selectedVersion} bind:mods={selectedMods} on:addmod={addModMenu.show}/>
     
