@@ -1,10 +1,7 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
     import { tooltip } from "../../components/tooltip";
-    import AddModCard from "./AddModCard.svelte";
     import type { FileIndex, Mod } from "./ModApi";
-    import { fetchLatestFiles } from "./ModApi";
-    import { createEventDispatcher, onDestroy } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { gameVersion, modLoader } from "./stores";
 
     export let mod: Mod;
