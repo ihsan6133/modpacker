@@ -1,11 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import type { ChangeEventHandler } from "svelte/elements";
-    import type { PageData } from "../$types";
-    export let minecraftVersions: string[];    
-    export let selectedVersion: string = minecraftVersions[0];
-    export let selectedModLoader: string;
-
+    import { gameVersion, modLoader } from "./stores";
+    import { page } from "$app/stores";
     const dispatch = createEventDispatcher();
 
     function saveModpack(event: MouseEvent) {
@@ -19,7 +15,7 @@
     function downloadModpack(event: MouseEvent) {
         dispatch("download");
     }
-
+    
 </script>
 
 <div class="container">
@@ -29,14 +25,14 @@
         <button on:click={downloadModpack}>Download</button>
     </div>
     
-
+    
     <div class="flex">
-        <select name="version" id="" bind:value={selectedVersion}>
-            {#each minecraftVersions as version}
+        <select name="version" id="" bind:value={$gameVersion}>
+            {#each $page.data.minecraftVersions as version}
                 <option value={version}>{version}</option>
             {/each}
         </select>
-        <select name="modloader" bind:value={selectedModLoader}>
+        <select name="modloader" bind:value={$modLoader}>
             <option value="forge">Forge</option>
             <option value="fabric">Fabric</option>
             <option value="cauldron">Cauldron</option>

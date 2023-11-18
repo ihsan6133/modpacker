@@ -2,11 +2,9 @@
     import Window from "../../../components/Window.svelte";
     import TextInput from "../../../components/input/TextInput.svelte";
     import type { Mod } from "../ModApi";
+    import { mods, gameVersion, modLoader } from "../stores";
     
     export let isOpen: boolean = false;
-    export let loadedMods: Mod[];
-    export let selectedVersion: string;
-    export let selectedModLoader: string;
 
     export function show() {
         window.show();
@@ -15,18 +13,18 @@
     let window: Window;
 
     let modPackName: string;
-    $: modPackName = `${selectedVersion}-${selectedModLoader}-pack.zip`;
+    $: modPackName = `${$gameVersion}-${$modLoader}-pack.zip`;
 
 
     function onSave() {
-        console.log(loadedMods);
+        console.log($mods);
         
         let savedModpacks = JSON.parse(localStorage.getItem("savedModpacks") || "[]");
         savedModpacks.push({
             name: modPackName,
-            version: selectedVersion,
-            modLoader: selectedModLoader,
-            mods: loadedMods.map(mod => {return {
+            gameVersion: $gameVersion,
+            modLoader: $modLoader,
+            mods: $mods.map(mod => {return {
                 id: mod.id,
                 name: mod.name,
             }})

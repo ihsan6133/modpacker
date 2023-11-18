@@ -1,29 +1,30 @@
 <script lang="ts">
     import type { Mod } from "../ModApi";
     import { createEventDispatcher } from "svelte";
+    import { mods } from "../stores";
+    import { tooltip } from "../../../components/tooltip";
     
-    export let modData: Mod;
-    export let selectedMods: Mod[];
-   
+    export let mod: Mod;
+
     let alreadyAdded = false;
-    $: alreadyAdded = selectedMods.some(mod => mod.id === modData.id);
+    $: alreadyAdded = $mods.some(_mod => _mod.id === mod.id);
     
     let title = "";
-    $: title = alreadyAdded ? "This mod is already added the the modpack" : "Add mod";
+    $: title = alreadyAdded ? "This mod is already added to the modpack" : "Add mod";
 
     
     const dispatch = createEventDispatcher();
     
     function onClick() {
-        dispatch("modadded", modData);
+        dispatch("modadded", mod);
     }
 </script>
 
-<button class="container" class:disabled={alreadyAdded} on:click={onClick} title={title} disabled='{alreadyAdded}' >
-    <img src={modData.thumbnailUrl} alt="thumbnail">
+<button use:tooltip={alreadyAdded} class="container" class:disabled={alreadyAdded} on:click={onClick} title={title} disabled='{alreadyAdded}' >
+    <img src={mod.thumbnailUrl} alt="thumbnail">
     <div class="info">
-        <h3>{modData.name}</h3>
-        <div>{modData.description}</div>
+        <h3>{mod.name}</h3>
+        <div>{mod.description}</div>
     </div>
 </button>
 

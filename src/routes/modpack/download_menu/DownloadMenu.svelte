@@ -3,49 +3,50 @@
     import javaLogo from "$lib/images/Java-Logo.svg";
     import CloseButton from "../CloseButton.svelte";
     import {downloadZip} from 'client-zip'
-    
+    import { mods, gameVersion, modLoader } from "../stores";
+    import Window from "../../../components/Window.svelte";
+
     export function show() {
-        isOpen = true;
-        dialog.show();
+        window.show();
     }
 
-    export let selectedMods: Mod[];
-    export let selectedVersion: string;
-    export let selectedModLoader: string;
-    export let isOpen = false;
+    export let isOpen: boolean;
+
+    let window: Window;
 
     let modPackName: string;
-    $: modPackName = `${selectedVersion}-${selectedModLoader}-pack.zip`;
+    $: modPackName = `${$gameVersion}-${$modLoader}-pack.zip`;
     
     let modFiles: Record<number, File> = {};
     
     async function loadFiles() {
         modFiles = {};
-        await Promise.all(selectedMods.map(async (mod)=> {
-            modFiles[mod.id] = await fetchFile(mod.id, selectedVersion, selectedModLoader);
+        await Promise.all($mods.map(async (mod)=> {
+            modFiles[mod.id] = await fetchFile(mod.id, $gameVersion, $modLoader);
         }));
     }
     function formatBytes(a: any,b=2){if(!+a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return`${parseFloat((a/Math.pow(1024,d)).toFixed(c))} ${["Bytes","KiB","MiB","GiB","TiB","PiB","EiB","ZiB","YiB"][d]}`}
 
     function generateDownloadUrl() {
-        const downloadLinks = selectedMods.map(mod => modFiles[mod.id].downloadUrl);
+        const downloadLinks = $mods.map(mod => modFiles[mod.id].downloadUrl);
         const b64 = btoa(JSON.stringify(downloadLinks));
         return `/api/download?downloadLinks=${b64}`;
     }
 
     let promise: Promise<void> = Promise.resolve();
-    $: selectedMods, selectedVersion, selectedModLoader, promise = loadFiles();
+    
+    $: $mods, $gameVersion, $modLoader, promise = loadFiles();
+        
     let dialog: HTMLDialogElement;
 </script>
 
-<dialog bind:this={dialog} class="container">
+<Window bind:this={window} bind:isOpen>
     <header>
         <h1>Download Modpack</h1>
-        <CloseButton on:click={()=>{isOpen=false; dialog.close()}}/>
     </header>
 
     <div class="table-container">
-        {#if selectedMods.length === 0}
+        {#if $mods.length === 0}
             <div class="info">No mods selected</div>
         {:else}
         {#await promise}
@@ -63,7 +64,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {#each selectedMods as mod, i}
+                        {#each $mods as mod, i}
                             <tr>
                                 <td>{i}</td>
                                 <td>{modFiles[mod.id].fileName}</td>
@@ -95,24 +96,9 @@
         {/await}
     </div>
 
-</dialog>
+</Window>
 
 <style>
-    .container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;   
-        background-color: #151515f5;
-        padding: 1rem;
-        box-sizing: border-box;     
-        border: none; 
-
-        align-items: center;
-        text-align: center;
-    }
-
     header {
         display: flex;
         justify-content: space-between;

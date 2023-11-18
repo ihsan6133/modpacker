@@ -2,20 +2,17 @@
     import ModCard from "./ModCard.svelte";
     import AddModCard from "./AddModCard.svelte";
     import type { Mod } from "./ModApi";
-    
-    export let mods: Mod[];
-    export let selectedVersion: string;
-    export let selectedModLoader: string;
+    import { mods, gameVersion, modLoader } from "./stores";
 
     function removeMod(modId: number) {
-        mods = mods.filter(mod => mod.id !== modId);
+        $mods = $mods.filter(mod => mod.id !== modId);
     }
 </script>
 
 <div class="mod-list">
     <AddModCard on:addmod/>
-    {#each mods as mod}
-        <ModCard selectedModLoader={selectedModLoader} selectedVersion={selectedVersion} modData={mod} on:removemod={()=>removeMod(mod.id)}/>
+    {#each $mods as mod}
+        <ModCard mod={mod} on:removemod={()=>removeMod(mod.id)}/>
     {/each}
 </div>
 

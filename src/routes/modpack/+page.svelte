@@ -12,17 +12,20 @@
     import { encode } from './base64ArrayBuffer';
     import { onMount } from 'svelte';
     import { browser } from '$app/environment';
+    import { mods, gameVersion, modLoader } from './stores';
 
     export let data: PageData;
     
-    let selectedMods: Mod[] = data.mods;
-
+    $mods = data.mods;
+    $gameVersion = data.version ?? data.minecraftVersions[0];
+    $modLoader = data.modLoader ?? "forge";
+    
     let addModMenu: AddModMenu;
     let downloadMenu: DownloadMenu;
     let saveMenu: SaveMenu;
 
     let isScrollLocked: boolean = false;
-
+    
     $: {
         if (addModMenuOpen || downloadMenuOpen) {
             isScrollLocked = true;
@@ -34,10 +37,7 @@
     let addModMenuOpen: boolean;
     let downloadMenuOpen: boolean;
     let saveMenuOpen: boolean;
-
-    let selectedVersion: string = data.version ?? data.minecraftVersions[0];
-    let selectedModLoader: string = data.modLoader ?? "forge";
-
+    
     function generateModPackUrl(mods: Mod[], version: string, modloader: string) {
         let modsQuery = "";
         
@@ -51,26 +51,23 @@
         return `${$page.url.origin}/modpack?${modsQuery}&version=${version}&modloader=${modloader}`;
     }
 
-    $: browser && window.history.replaceState(window.history.state, "", generateModPackUrl(selectedMods, selectedVersion, selectedModLoader));
+    $: browser && window.history.replaceState(window.history.state, "", generateModPackUrl($mods, $gameVersion, $modLoader));
     
     // $: goto(generateModPackUrl(selectedMods, selectedVersion, selectedModLoader), {replaceState: true});
-    function onExport() {
-        let modIds: Int32Array = new Int32Array(selectedMods.map(mod => mod.id));         
-        let base64: string = encode(modIds.buffer);
-        console.log(base64);   
-    }
+    function onExport() {}
+
 </script>
 
 <div class="container" class:scroll-lock={isScrollLocked}>
     <Header msg={"New Modpack"}/>
     
-    <Controls bind:selectedVersion bind:selectedModLoader minecraftVersions={data.minecraftVersions} on:save={saveMenu.show} on:download={downloadMenu.show} on:export={onExport}/>
+    <Controls on:save={saveMenu.show} on:download={downloadMenu.show} on:export={onExport}/>
 
-    <ModList selectedModLoader={selectedModLoader} selectedVersion={selectedVersion} bind:mods={selectedMods} on:addmod={addModMenu.show}/>
+    <ModList on:addmod={addModMenu.show}/>
     
-    <AddModMenu bind:isOpen={addModMenuOpen} bind:selectedMods={selectedMods} bind:this={addModMenu}/>
-    <DownloadMenu bind:isOpen={downloadMenuOpen} selectedMods={selectedMods} selectedVersion={selectedVersion} selectedModLoader={selectedModLoader} bind:this={downloadMenu}/>
-    <SaveMenu selectedModLoader={selectedModLoader} selectedVersion={selectedVersion} loadedMods={selectedMods}  bind:isOpen={saveMenuOpen} bind:this={saveMenu}/>
+    <AddModMenu bind:isOpen={addModMenuOpen} bind:this={addModMenu}/>
+    <DownloadMenu bind:isOpen={downloadMenuOpen} bind:this={downloadMenu}/>
+    <SaveMenu  bind:isOpen={saveMenuOpen} bind:this={saveMenu}/>
 </div>
 
 <style>

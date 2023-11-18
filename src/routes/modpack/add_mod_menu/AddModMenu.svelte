@@ -6,16 +6,16 @@
     import type { Mod } from "../ModApi";
     import { fetchMods, searchMods } from "../ModApi";
     import SearchModCard from "./SearchModCard.svelte";
+    import Window from "../../../components/Window.svelte";
+    import { mods } from "../stores";
     
     export function show() {
-        isOpen = true;
-        dialog.show();
+        window.show();
     }
 
-    export let selectedMods: Mod[];
     export let isOpen = false;
 
-    let dialog: HTMLDialogElement;
+    let window: Window;
     let modPromise: Promise<Mod[]> = Promise.resolve([]);
 
     function onSearch(event: CustomEvent<string>) {
@@ -23,17 +23,16 @@
     }
 
     function onModAdded(event: CustomEvent<Mod>) {
-        isOpen = false;
-        dialog.close();
-        selectedMods = [...selectedMods, event.detail];
+        mods.update(mods => [...mods, event.detail]);
+        window.close();
     }
 
 </script>
 
-<dialog bind:this={dialog} class="container" >
+<Window bind:this={window} bind:isOpen hasCloseButton={false}>
     <header>
         <SearchBar on:search={onSearch}/>
-        <CloseButton on:click={()=>{isOpen=false; dialog.close()}}/>   
+        <CloseButton on:click={window.close}/>   
     </header>
     
     <div class="mod-list">
@@ -44,11 +43,11 @@
                 <div class="info">No mods found</div>
             {/if}
             {#each mods as mod}
-                <SearchModCard selectedMods={selectedMods} modData={mod} on:modadded={onModAdded}/>
+                <SearchModCard mod={mod} on:modadded={onModAdded}/>
             {/each}
         {/await}
     </div>
-</dialog>
+</Window>
 
 
 <style>

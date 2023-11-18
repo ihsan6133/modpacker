@@ -1,6 +1,8 @@
 import Tooltip from "./Tooltip.svelte";
 
-export function tooltip(element: HTMLElement) {
+export function tooltip(element: HTMLElement, use: boolean = true) {
+	if (!use) return {destroy() {}};
+	
 	let title: string;
 	let tooltipComponent: Tooltip;
 

@@ -12,6 +12,7 @@ interface Mod {
     authors: string[];
     downloads: number;
     thumbnailUrl: string;
+    latestFileIndexes: FileIndex[];
 }
 
 interface FileIndex {
@@ -35,7 +36,7 @@ interface File {
 }
 
 function modLoaderIdToString(modLoaderId: number) {
-    const modLoaderMap = [null, "forge", "cauldron", "liteloader", "fabric", "quilt"];
+    const modLoaderMap = ["", "forge", "cauldron", "liteloader", "fabric", "quilt"];
     return modLoaderMap[modLoaderId];
 }
 
@@ -68,16 +69,24 @@ async function searchMods(searchTerm: string) : Promise<Mod[]> {
 
     const data = await response.json();
 
-    const mods: Mod[] = data.data.map((mod: any) => {
-
-            
+    const mods: Mod[] = data.data.map((mod: any): Mod => {     
         return {
             id: mod.id,
             name: mod.name,
             description: mod.summary,
-            authors: "",
+            authors: [""],
             downloads: mod.downloadCount,
-            thumbnailUrl: mod.logo ? mod.logo.url : CURSEFORGE_THUMBNAIL_FALLBACK_URL
+            thumbnailUrl: mod.logo ? mod.logo.url : CURSEFORGE_THUMBNAIL_FALLBACK_URL,
+            latestFileIndexes: mod.latestFilesIndexes.map((fileIndex: any): FileIndex => {
+                return {
+                    gameVersion: fileIndex.gameVersion,
+                    fileId: fileIndex.fileId,
+                    fileName: fileIndex.fileName,
+                    releaseType: fileIndex.releaseType,
+                    gameVersionTypeId: fileIndex.gameVersionTypeId,
+                    modLoader: modLoaderIdToString(fileIndex.modLoader)
+                };
+            })
         };
     });
 
