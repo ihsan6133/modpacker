@@ -20,7 +20,7 @@
     }
 </script>
 
-<button use:tooltip={alreadyAdded} class="container" class:disabled={alreadyAdded} on:click={onClick} title={title} disabled='{alreadyAdded}' >
+<button class="container" class:disabled={alreadyAdded} on:click={onClick} title={title} disabled='{alreadyAdded}' >
     <img src={mod.thumbnailUrl} alt="thumbnail">
     <div class="info">
         <h3>{mod.name}</h3>
