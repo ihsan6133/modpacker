@@ -152,13 +152,6 @@
         fill: #ff0000;
     }
 
-    .loading-circle {
-        width: 25px;
-        height: 25px;
-        border-width: 3px;
-        box-sizing: border-box;
-
-    }   
     .control {
         display: flex;
         gap: 0.5rem;

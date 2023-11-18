@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import SearchBar from "../../../components/input/SearchBar.svelte";
     import CloseButton from "../CloseButton.svelte";
 
     import type { Mod } from "../ModApi";
-    import { fetchMods, searchMods } from "../ModApi";
+    import { searchMods } from "../ModApi";
     import SearchModCard from "./SearchModCard.svelte";
     import Window from "../../../components/Window.svelte";
     import { mods } from "../stores";
@@ -51,19 +50,6 @@
 
 
 <style>
-
-    .container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;   
-        background-color: #151515f5;
-        padding: 1rem;
-        box-sizing: border-box;     
-        border: none; 
-    }
-
     header {
         display: flex;
         justify-content: space-between;
