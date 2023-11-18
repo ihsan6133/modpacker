@@ -60,8 +60,6 @@
         let filtered = patchNumsModLoaderFiltered.filter(file=>{
             return parseInt(file.gameVersion.split(".")[2] ?? "0") <= parseInt(selectedPatchVersion);
         });
-
-        console.log("filtered", filtered);
         
 
         let last = filtered.pop() as FileIndex;

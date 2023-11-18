@@ -114,7 +114,17 @@ async function fetchMods(modIds: number[], fetch: any) : Promise<Mod[]> {
             description: mod.summary,
             authors: "",
             downloads: mod.downloadCount,
-            thumbnailUrl: mod.logo ? mod.logo.url : CURSEFORGE_THUMBNAIL_FALLBACK_URL
+            thumbnailUrl: mod.logo ? mod.logo.url : CURSEFORGE_THUMBNAIL_FALLBACK_URL,
+            latestFileIndexes: mod.latestFilesIndexes.map((fileIndex: any): FileIndex => {
+                return {
+                    gameVersion: fileIndex.gameVersion,
+                    fileId: fileIndex.fileId,
+                    fileName: fileIndex.fileName,
+                    releaseType: fileIndex.releaseType,
+                    gameVersionTypeId: fileIndex.gameVersionTypeId,
+                    modLoader: modLoaderIdToString(fileIndex.modLoader)
+                };
+            })
         };
     });
 
