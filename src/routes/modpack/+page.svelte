@@ -11,15 +11,12 @@
     import { page } from '$app/stores';
     import { encode } from './base64ArrayBuffer';
     import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
+    import { browser } from '$app/environment';
+
     export let data: PageData;
     
     let selectedMods: Mod[] = data.mods;
 
-    onMount(() => {
-        window = window;
-    });
-    let window: Window;
     let addModMenu: AddModMenu;
     let downloadMenu: DownloadMenu;
     let saveMenu: SaveMenu;
@@ -53,9 +50,9 @@
 
         return `${$page.url.origin}/modpack?${modsQuery}&version=${version}&modloader=${modloader}`;
     }
-    
 
-    // $: window?.history.replaceState(window.history.state, "", generateModPackUrl(selectedMods, selectedVersion, selectedModLoader));
+    $: browser && window.history.replaceState(window.history.state, "", generateModPackUrl(selectedMods, selectedVersion, selectedModLoader));
+    
     // $: goto(generateModPackUrl(selectedMods, selectedVersion, selectedModLoader), {replaceState: true});
     function onExport() {
         let modIds: Int32Array = new Int32Array(selectedMods.map(mod => mod.id));         
@@ -69,7 +66,7 @@
     
     <Controls bind:selectedVersion bind:selectedModLoader minecraftVersions={data.minecraftVersions} on:save={saveMenu.show} on:download={downloadMenu.show} on:export={onExport}/>
 
-    <ModList selectedVersion={selectedVersion} bind:mods={selectedMods} on:addmod={addModMenu.show}/>
+    <ModList selectedModLoader={selectedModLoader} selectedVersion={selectedVersion} bind:mods={selectedMods} on:addmod={addModMenu.show}/>
     
     <AddModMenu bind:isOpen={addModMenuOpen} bind:selectedMods={selectedMods} bind:this={addModMenu}/>
     <DownloadMenu bind:isOpen={downloadMenuOpen} selectedMods={selectedMods} selectedVersion={selectedVersion} selectedModLoader={selectedModLoader} bind:this={downloadMenu}/>

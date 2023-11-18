@@ -20,7 +20,7 @@ interface FileIndex {
     fileName: string;
     releaseType: number;
     gameVersionTypeId: number;
-    modLoader: number
+    modLoader: string;
 }
 
 interface File {
@@ -34,6 +34,11 @@ interface File {
     downloadUrl: string;
 }
 
+function modLoaderIdToString(modLoaderId: number) {
+    const modLoaderMap = [null, "forge", "cauldron", "liteloader", "fabric", "quilt"];
+    return modLoaderMap[modLoaderId];
+}
+
 async function fetchLatestFiles(modId: number): Promise<FileIndex[]> {
     const res = await fetch(`${CURSEFORGE_BASE_URL}/v1/mods/${modId}`, {
         headers: {
@@ -41,7 +46,16 @@ async function fetchLatestFiles(modId: number): Promise<FileIndex[]> {
         }
     });
     const data = await res.json();
-    return data.data.latestFilesIndexes;
+    return data.data.latestFilesIndexes.map((fileIndex: any) => {
+        return {
+            gameVersion: fileIndex.gameVersion,
+            fileId: fileIndex.fileId,
+            fileName: fileIndex.fileName,
+            releaseType: fileIndex.releaseType,
+            gameVersionTypeId: fileIndex.gameVersionTypeId,
+            modLoader: modLoaderIdToString(fileIndex.modLoader)
+        };
+    });
 }
 
 async function searchMods(searchTerm: string) : Promise<Mod[]> {

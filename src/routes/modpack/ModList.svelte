@@ -5,6 +5,7 @@
     
     export let mods: Mod[];
     export let selectedVersion: string;
+    export let selectedModLoader: string;
 
     function removeMod(modId: number) {
         mods = mods.filter(mod => mod.id !== modId);
@@ -14,7 +15,7 @@
 <div class="mod-list">
     <AddModCard on:addmod/>
     {#each mods as mod}
-        <ModCard selectedVersion={selectedVersion} modData={mod} on:removemod={()=>removeMod(mod.id)}/>
+        <ModCard selectedModLoader={selectedModLoader} selectedVersion={selectedVersion} modData={mod} on:removemod={()=>removeMod(mod.id)}/>
     {/each}
 </div>
 
